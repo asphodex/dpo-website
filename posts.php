@@ -1,3 +1,16 @@
+<?php
+$link = mysqli_connect('localhost', 'root', 'sphdx', 'first');
+
+$id = $_GET['id'];
+
+$sql = "SELECT * FROM posts WHERE id = '$id'";
+$res = mysqli_query($link, $sql);
+$rows = mysqli_fetch_array($res);
+$title = $rows['title'];
+$mainText = $rows['main_text'];
+$image = $rows['image'];
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -19,30 +32,24 @@
             <span>Мой сайт</span>
         </a>
         <div>
-            <a href="profile.html" class="btn btn-outline-primary">Профиль</a>
-            <a href="index.html" class="btn btn-outline-danger">Выйти</a>
+            <a href="profile.php" class="btn btn-outline-primary">Профиль</a>
+            <a href="index.php" class="btn btn-outline-danger">Выйти</a>
         </div>
     </div>
 </nav>
 
 <div class="container mt-5">
     <div class="row">
-        <div class="col-12 col-md-8 mx-auto">
+        <div class="col-12 col-md-8 mx-auto text-center">
+            <?php
+            echo "<h1> $title </h1>";
 
-            <div class="post-block mb-4">
-                <h3 class="post-title">Название поста 1</h3>
-                <div class="post-content">
-                    <p>Тест 1</p>
-                </div>
-            </div>
+            if (!empty($image)) {
+                echo "<img src='$image' class='img-fluid rounded shadow my-4 post-image'>";
+            }
 
-            <div class="post-block mb-4">
-                <h3 class="post-title">Название поста 2</h3>
-                <div class="post-content">
-                    <p>Тест 2</p>
-                </div>
-            </div>
-
+            echo "<h2> $mainText </h2>";
+            ?>
         </div>
     </div>
 </div>

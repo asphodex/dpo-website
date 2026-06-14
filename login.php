@@ -16,14 +16,45 @@
         <div class="col-12 col-md-6 mx-auto text-center">
             <h1 class="mb-4">Вход</h1>
 
-            <form action="login.html" method="POST" class="d-flex flex-column gap-3">
+            <form action="login.php" method="POST" class="d-flex flex-column gap-3">
                 <input type="text" name="login" class="form-control app-input" placeholder="Логин" required>
                 <input type="password" name="password" class="form-control app-input" placeholder="Пароль" required>
                 <button class="btn btn-primary" type="submit" name="submit">Войти</button>
-                <p class="mt-3">Нет аккаунта? <a href="registration.html">Регистрация</a></p>
+                <p class="mt-3">Нет аккаунта? <a href="registration.php">Регистрация</a></p>
             </form>
         </div>
     </div>
 </div>
 </body>
 </html>
+
+<?php
+
+require_once('db.php');
+
+if (isset($_POST['User'])) {
+    header('Location: /profile.php');
+    exit();
+}
+
+$link = mysqli_connect('127.0.0.1', 'root', 'sphdx', 'first');
+
+if (isset($_POST['submit'])) {
+    $login = $_POST['login'];
+    $password = $_POST['password'];
+
+    if (!$login || !$password) {
+        die("All fields are required");
+    }
+
+    $sql = "SELECT * FROM users WHERE username='$login' AND password='$password'";
+
+    $result = mysqli_query($link, $sql);
+
+    if (mysqli_num_rows($result) == 1) {
+        setcookie("User", $login, time() + 7200);
+        header('Location: /profile.php');
+    } else {
+        echo 'Invalid login or password';
+    }
+}

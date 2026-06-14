@@ -16,15 +16,44 @@
         <div class="col-12 col-md-6 mx-auto text-center">
             <h1 class="mb-4">Регистрация</h1>
 
-            <form action="registration.html" method="POST" class="d-flex flex-column gap-3">
+            <form action="registration.php" method="POST" class="d-flex flex-column gap-3">
                 <input type="text" name="login" class="form-control app-input" placeholder="Логин" required>
                 <input type="email" name="email" class="form-control app-input" placeholder="Почта" required>
                 <input type="password" name="password" class="form-control app-input" placeholder="Пароль" required>
                 <button class="btn btn-primary" type="submit" name="submit">Зарегистрироваться</button>
-                <p class="mt-3">Уже есть аккаунт? <a href="login.html">Войти</a></p>
+                <p class="mt-3">Уже есть аккаунт? <a href="login.php">Войти</a></p>
             </form>
         </div>
     </div>
 </div>
 </body>
 </html>
+
+<?php
+require_once("db.php");
+
+if (isset($_COOKIE['User'])) {
+    header("Location: profile.php");
+    exit();
+}
+
+$link = mysqli_connect('127.0.0.1', 'root', 'sphdx', 'first');
+
+if (isset($_POST['submit'])) {
+    $login = $_POST['login'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    if (!$login || !$email || !$password) {
+        die("All fields are required");
+    }
+
+    $sql = "INSERT INTO users (username, email, password) VALUES ('$login', '$email', '$password')";
+
+    if (!mysqli_query($link, $sql)) {
+        echo "Error insert user in table:" . mysqli_error($link);
+    } else {
+        header("Location: /login.php");
+        exit();
+    }
+}

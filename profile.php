@@ -18,10 +18,11 @@
             <img src="logo.png" alt="логотип-сайта" class="me-2">
             <span>Мой сайт</span>
         </a>
-        <div>
-            <a href="posts.html" class="btn btn-outline-primary">Посты</a>
-            <a href="index.html" class="btn btn-outline-danger">Выйти</a>
-        </div>
+        <?php if (isset($_COOKIE['User'])): ?>
+            <form action="/logout.php" method="POST" class="d-flex">
+                <button class="btn btn-outline-danger" type="submit">Выйти</button>
+            </form>
+        <?php endif; ?>
     </div>
 </nav>
 
@@ -44,14 +45,17 @@
 
     <div class="mt-5">
         <h2 class="text-center mb-4">Добавить новый пост</h2>
-        <form action="profile.html" id="postForm" class="d-flex flex-column gap-3" method="POST" enctype="multipart/form-data">
+        <form action="profile.php" id="postForm" class="d-flex flex-column gap-3" method="POST"
+              enctype="multipart/form-data">
             <div class="form-group">
                 <label class="form-label" for="postTitle">Название поста</label>
-                <input type="text" name="postTitle" class="form-control app-input" id="postTitle" placeholder="Введите название" required>
+                <input type="text" name="postTitle" class="form-control app-input" id="postTitle"
+                       placeholder="Введите название" required>
             </div>
             <div class="form-group">
                 <label class="form-label" for="postContent">Текст поста</label>
-                <textarea name="postContent" class="form-control app-input" id="postContent" placeholder="Введите текст" rows="5" required></textarea>
+                <textarea name="postContent" class="form-control app-input" id="postContent" placeholder="Введите текст"
+                          rows="5" required></textarea>
             </div>
             <div class="form-group">
                 <label class="form-label" for="file">Добавить файл</label>
@@ -65,3 +69,48 @@
 <script src="js/script.js"></script>
 </body>
 </html>
+
+<?php
+
+if (!isset($_COOKIE['User'])) {
+    header('location: /index.php');
+    exit();
+}
+
+require_once('db.php');
+$link = mysqli_connect('127.0.0.1', 'root', 'sphdx', 'first');
+
+if (isset($_POST['submit'])) {
+    $title = $_POST['postTitle'];
+    $mainText = $_POST['postContent'];
+
+    if (!$title || !$mainText) die("Title and text fields are required");
+
+    $image = '';
+
+    if (!empty($_FILES['file'])) {
+        if ((($_FILES['file']['type'] == 'image/gif') ||
+                        ($_FILES["file"]["type"] == "image/jpeg") ||
+                        ($_FILES["file"]["type"] == "image/jpg") ||
+                        ($_FILES["file"]["type"] == "image/pjpeg") ||
+                        ($_FILES["file"]["type"] == "image/x-png") ||
+                        ($_FILES["file"]["type"] == "image/png")) &&
+                ($_FILES["file"]["size"] < 1024000)) {
+            $image = "upload/" . $_FILES["file"]["name"];
+
+            move_uploaded_file($_FILES["file"]["tmp_name"],
+                    "upload/" . $_FILES["file"]["name"]);
+
+            echo "Loaded in: " . "upload/" . $_FILES["file"]["name"];
+        } else {
+            echo "Upload failed";
+        }
+    }
+
+    $sql = "INSERT INTO posts (title, main_text, image)
+            VALUES ('$title', '$mainText', '$image')";
+
+    if (!mysqli_query($link, $sql)) {
+        die("Error insert data post");
+    }
+}
