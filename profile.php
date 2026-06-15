@@ -78,7 +78,7 @@ if (!isset($_COOKIE['User'])) {
 }
 
 require_once('db.php');
-$link = mysqli_connect('127.0.0.1', 'root', 'sphdx', 'first');
+$link = mysqli_connect('db', 'root', 'sphdx', 'first');
 
 if (isset($_POST['submit'])) {
     $title = $_POST['postTitle'];

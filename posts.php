@@ -1,5 +1,5 @@
 <?php
-$link = mysqli_connect('localhost', 'root', 'sphdx', 'first');
+$link = mysqli_connect('db', 'root', 'sphdx', 'first');
 
 $id = $_GET['id'];
 

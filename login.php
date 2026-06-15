@@ -37,7 +37,7 @@ if (isset($_POST['User'])) {
     exit();
 }
 
-$link = mysqli_connect('127.0.0.1', 'root', 'sphdx', 'first');
+$link = mysqli_connect('db', 'root', 'sphdx', 'first');
 
 if (isset($_POST['submit'])) {
     $login = $_POST['login'];
