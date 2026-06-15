@@ -30,7 +30,7 @@
                 $res = mysqli_query($link, $sql);
                 if (mysqli_num_rows($res) > 0) {
                     while ($row = mysqli_fetch_array($res)) {
-                        echo "<a href='post.php?id=" . $row['id'] . "'>" . $row['title'] . "</a><br>";
+                        echo "<a href='posts.php?id=" . $row['id'] . "'>" . $row['title'] . "</a><br>";
                     }
                 } else {
                     echo "No posts";
