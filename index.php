@@ -26,7 +26,7 @@
             <?php
             } else {
                 $link = mysqli_connect('localhost', 'root', 'sphdx', 'first');
-                $sql = "SELECT * FROM post";
+                $sql = "SELECT * FROM posts";
                 $res = mysqli_query($link, $sql);
                 if (mysqli_num_rows($res) > 0) {
                     while ($row = mysqli_fetch_array($res)) {
